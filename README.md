@@ -55,4 +55,33 @@ principal_comp = pca.fit_transform(creditcard_df_scaler)
 principal_comp
 ```
 ## Autoencoders
-Autoencoders are a type of ANN(Artificial Neutral Networks) used to perform data encoding data.  
+Autoencoders are a type of ANN(Artificial Neutral Networks) used to perform data encoding data. They use the same input data for the input and output. To do this they use a encoder which is the input data and a decoder network which is the output data and they are two ANNs opposing each other. The input and output images are taken to reduce its dimension to represent them in a much smaller space called the code layer but with the same information. Then they are upsampled using the decoder until the images are reconstructed again. The autoencoders will not work if all the input data are independant.
+
+Here is the autoender network built for this project:
+``` python
+input_df = Input(shape = (17,))
+
+x = Dense(7, activation='relu')(input_df)
+x = Dense(500, activation='relu', kernel_initializer= 'glorot_uniform')(x)
+x = Dense(500, activation='relu', kernel_initializer= 'glorot_uniform')(x)
+x = Dense(2000, activation='relu', kernel_initializer= 'glorot_uniform')(x)
+
+encoded = Dense(10, activation='relu', kernel_initializer='glorot_uniform')(x)
+
+x = Dense(2000, activation='relu', kernel_initializer= 'glorot_uniform')(encoded)
+x = Dense(500, activation='relu', kernel_initializer= 'glorot_uniform')(x)
+
+
+decoded = Dense(17, kernel_initializer= 'glorot_uniform')(x)
+
+#Autoencoder
+autoencoder = Model(input_df, decoded)
+
+#Encoder
+encoder = Model(input_df, encoded)
+
+
+autoencoder.compile(optimizer = 'adam', loss = 'mean_squared_error')
+```
+
+
